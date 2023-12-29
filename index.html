@@ -5,16 +5,15 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
-    <title>Github Pages</title>
-    <style>
-        .inline-80 {
-            display: inline-block; 
-            width: 80px;
-        }
-    </style>
+    <title>Buku</title>
 </head>
 <body>
+	<div>
+		&nbsp;
+	</div>
+	<div class="container" id="menu">
+		<a href="add.html" class="btn btn-default">Tambah Buku</a> &nbsp; 
+	</div>
     <div>
 		&nbsp;
 	</div>
@@ -23,13 +22,57 @@
 		<table class="table table-striped">
 			<thead>
 				<tr>
+					<th>ID Buku</th>
 					<th>Judul Buku</th>
 					<th>Author</th>
+					<th>Action</th>
 				</tr>
 			</thead>
 			<tbody id="myTable"></tbody>
 		</table>
 	</div>
     <script src="script.js"></script>
+	<script>
+		getBook()
+		function getBook() {
+			fetch(`${base_api_url}/book`, {
+				headers: {
+					'Authorization': 'Bearer '+localStorage.getItem('token'),
+				}
+			}).then((response) => {
+				response.json().then((data) => {
+					console.log(data)
+					buildTable(data.data)
+				});
+			});
+		}
+
+		function buildTable(data) {
+			var table = document.getElementById('myTable')
+			for(var i = 0; i < data.length; i++) {
+				var row = `<tr id="tr_${data[i].id}"><td>${data[i].id}</td><td>${data[i].name}</td><td>${data[i].author}</td><td>
+								<a href="edit.html?id=${data[i].id}" class="btn btn-default">Edit</a> &nbsp; 
+								<button onclick="destroy(${data[i].id},'${data[i].name}')" class="btn btn-default">Hapus</button>
+							</td></tr>`
+				table.innerHTML += row
+			}
+		}
+
+		function destroy(id,name) {
+			if(confirm('Apakah anda ingin menghapus '+name+'?') == true) {
+				fetch(`${base_api_url}/book/${id}`, {
+					method: 'DELETE',
+					headers: {
+						'Authorization': 'Bearer '+localStorage.getItem('token'),
+					}
+				}).then(response => {
+					response.json().then(data => {
+						alert(data.message)
+						document.getElementById('tr_'+id).innerHTML = ""
+					})
+				})
+			}
+		}
+	</script>
 </body>
 </html>
