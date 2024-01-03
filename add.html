@@ -25,29 +25,5 @@
 		</form>
 	</div>
     <script src="script.js"></script>
-    <script>
-        function add() {
-			var name = document.getElementById('name').value
-			var author = document.getElementById('author').value
-			fetch(`${base_api_url}/book`, {
-				method: 'POST',
-				headers: {
-					'Authorization': 'Bearer '+localStorage.getItem('token'),
-					'Content-Type': 'application/json',
-				},
-				body: JSON.stringify({
-					name : name,
-					author : author
-				})
-			}).then(response => {
-				if(response.ok){
-					response.json().then(data => {
-						alert(data.message)
-						window.location.href = 'index.html'
-					})
-				}
-			})
-		}
-    </script>
 </body>
 </html>

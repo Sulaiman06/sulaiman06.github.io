@@ -27,42 +27,6 @@
 	<script src="script.js"></script>
     <script>
 		edit(window.location.search.split('id=')[1])
-		function edit(id) {
-			fetch(`${base_api_url}/book/${id}`, {
-				headers: {
-					'Authorization': 'Bearer '+localStorage.getItem('token'),
-				}
-			}).then(response => {
-				response.json().then(data => {
-					console.log(data)
-					document.getElementById('name').value = data.data.name
-					document.getElementById('author').value = data.data.author
-				})
-			})
-		}
-
-		function update(id) {
-			var name = document.getElementById('name').value
-			var author = document.getElementById('author').value
-			fetch(`${base_api_url}/book/${id}`, {
-				method: 'PATCH',
-				headers: {
-					'Authorization': 'Bearer '+localStorage.getItem('token'),
-					'Content-Type': 'application/json',
-				},
-				body: JSON.stringify({
-					name : name,
-					author : author
-				})
-			}).then(response => {
-				if(response.ok){
-					response.json().then(data => {
-						alert(data.message)
-						window.location.href = 'index.html'
-					})
-				}
-			})
-		}
 	</script>
 </body>
 </html>
